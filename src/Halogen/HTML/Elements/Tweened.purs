@@ -34,3 +34,30 @@ type DivProperties =
   ( onScroll :: I )))
 div :: forall b p i. Node b DivProperties p i
 div = ttweenNode HH.div
+
+type SpanProperties = 
+  ( InteractiveEvents 
+  ( GlobalProperties ()))
+span :: forall b p i. Node b SpanProperties p i
+span = ttweenNode HH.span
+
+type PProperties = 
+  ( InteractiveEvents 
+  ( GlobalProperties 
+  ( onScroll :: I )))
+p :: forall b p i. Node b PProperties p i
+p = ttweenNode HH.p
+
+type UlProperties = 
+  ( InteractiveEvents 
+  ( GlobalProperties 
+  ( onScroll :: I )))
+ul :: forall b p i. Node b UlProperties p i
+ul = ttweenNode HH.ul
+
+type LiProperties = 
+  ( InteractiveEvents 
+  ( GlobalProperties 
+  ( value :: I, onScroll :: I )))
+li :: forall b p i. Node b LiProperties p i
+li = ttweenNode HH.li

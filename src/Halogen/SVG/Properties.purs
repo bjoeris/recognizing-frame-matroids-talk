@@ -2,7 +2,7 @@ module Halogen.SVG.Properties where
 
 import Prelude
 
-import Data.Maybe (Maybe(Just,Nothing))
+import Data.Maybe (Maybe(Just,Nothing), maybe)
 import Data.Exists (mkExists)
 import Data.Tuple (Tuple(Tuple))
 
@@ -15,6 +15,9 @@ import Halogen.CSS.Colors (class IsColor, toColorString)
 
 attr :: forall i. String -> String -> Prop i
 attr = Attr Nothing <<< attrName
+
+class_ :: forall i. String -> Prop i
+class_ = attr "class"
 
 d :: forall i. String -> Prop i
 d = attr "d"
@@ -48,6 +51,9 @@ height = lengthAttr "height"
 
 fill :: forall v i. IsColor v => v -> Prop i
 fill = colorAttr "fill"
+
+fillOpacity :: forall i. Number -> Prop i
+fillOpacity = numAttr "fill-opacity"
 
 stroke :: forall v i. IsColor v => v -> Prop i
 stroke = colorAttr "stroke"
@@ -144,18 +150,39 @@ viewBox :: forall i. Number -> Number -> Number -> Number -> Prop i
 viewBox x1 y1 x2 y2 =
   Attr Nothing (attrName "viewBox") (show x1 <> " " <> show y1 <> " " <> show x2 <> " " <> show y2)
 
-data PreserveAspectRatio
+data Align
   = Min
   | Mid
   | Max
 
-preserveAspectRatio :: forall i. PreserveAspectRatio -> PreserveAspectRatio -> Prop i
-preserveAspectRatio x y = 
-  Attr Nothing (attrName "preserveAspectRatio") ("x" <> str x <> "Y" <> str y)
+data MeetOrSlice
+  = Meet
+  | Slice
+
+type PreserveAspectRatio =
+  { defer :: Boolean
+  , align :: Maybe { x :: Align, y :: Align }
+  , meetOrSlice :: Maybe MeetOrSlice }
+
+toPreserveAspectRatioString :: PreserveAspectRatio -> String
+toPreserveAspectRatioString {defer,align,meetOrSlice} =
+  sDefer <> sFullAlign <> sMeetOrSlice
   where
-  str Min = "Min"
-  str Mid = "Mid"
-  str Max = "Max" 
+  sDefer = if defer
+    then "defer "
+    else ""
+  sFullAlign = align # maybe "none" (\{x,y} -> "x" <> sAlign x <> "Y" <> sAlign y)
+  sAlign Min = "Min"
+  sAlign Mid = "Mid"
+  sAlign Max = "Max"
+  sMeetOrSlice = case meetOrSlice of
+    Nothing -> ""
+    Just Meet -> " meet"
+    Just Slice -> " slice"
+
+preserveAspectRatio :: forall i. PreserveAspectRatio -> Prop i
+preserveAspectRatio = 
+  Attr Nothing (attrName "preserveAspectRatio") <<< toPreserveAspectRatioString
 
 data GradientUnits
   = UserSpaceOnUse

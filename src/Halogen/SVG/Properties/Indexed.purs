@@ -10,6 +10,9 @@ import Halogen.CSS.Colors (class IsColor)
 
 import Unsafe.Coerce (unsafeCoerce)
 
+class_ :: forall r i. String -> IProp ( class :: I | r) i
+class_ = refine P.class_
+
 d :: forall r i. String -> IProp ( d :: I | r) i
 d = refine P.d
 
@@ -30,6 +33,9 @@ height = refine P.height
 
 fill :: forall v r i. IsColor v => v -> IProp ( fill :: I | r) i
 fill = refine P.fill
+
+fillOpacity :: forall r i. Number -> IProp ( fillOpacity :: I | r) i
+fillOpacity = refine P.fillOpacity
 
 stroke :: forall v r i. IsColor v => v -> IProp ( stroke :: I | r) i
 stroke = refine P.stroke
@@ -85,7 +91,7 @@ stopColor = refine P.stopColor
 viewBox :: forall r i. Number -> Number -> Number -> Number -> IProp ( viewBox :: I | r) i
 viewBox = unsafeCoerce P.viewBox
 
-preserveAspectRatio :: forall r i. P.PreserveAspectRatio -> P.PreserveAspectRatio -> IProp (preserveAspectRatio :: I | r) i
+preserveAspectRatio :: forall r i. P.PreserveAspectRatio -> IProp (preserveAspectRatio :: I | r) i
 preserveAspectRatio = unsafeCoerce P.preserveAspectRatio
 
 gradientUnits :: forall r i. P.GradientUnits -> IProp (gradientUnits :: I | r) i

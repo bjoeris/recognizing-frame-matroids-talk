@@ -2,7 +2,9 @@ module Halogen.HTML.Properties.Tweened where
 
 import Prelude
 
+import Halogen.HTML.Core (ClassName)
 import Halogen.HTML.Properties.Indexed (IProp(), I())
+import Halogen.HTML.Properties.Indexed as I
 
 import Timeline.Tween (TTween, ttween, ttween', tween, Tween)
 import Timeline.Build (StepId(), Timeline())
@@ -38,3 +40,6 @@ tweenProp :: forall b a r i.
   Tween b (IProp r i)
 tweenProp id mkProp val = 
   tween id (val >>> mkProp)
+
+class_ :: forall b r i. ClassName -> TTween b (IProp ("class" :: I | r) i)
+class_ = I.class_ >>> pure >>> pure

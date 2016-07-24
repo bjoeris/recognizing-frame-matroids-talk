@@ -4,8 +4,8 @@ import Prelude
 
 import Data.Time.Duration (Milliseconds, unMilliseconds)
 import Data.Array as Array
-import Data.Maybe (fromMaybe)
-import Data.Int (toNumber)
+import Data.Maybe (Maybe(Just,Nothing), fromMaybe)
+import Data.Int as Int
 import Data.Maybe.Unsafe (unsafeFromMaybeWith)
 
 import Debug.Trace (traceAny,spy)
@@ -49,6 +49,7 @@ data Movement
   | MoveReverse
   | MoveBegin
   | MoveEnd
+  | MoveTo Number Direction
 
 clampState :: forall b a. StateProps b a -> StateProps b a
 clampState state = {compiled : state.compiled, stepState}
@@ -86,6 +87,17 @@ move' target state =
       }
     MoveBegin -> StepPaused 0
     MoveEnd -> StepPaused (numSteps state.compiled - 1)
+    MoveTo t dir ->
+      let i = Int.floor t
+      in if i == completedStepIndex
+         then state.stepState
+         else case Int.fromNumber t of
+            Nothing -> StepTrans
+              { stepIndex : i
+              , progress : t - (Int.toNumber i)
+              , direction : dir
+              }
+            Just i -> StepPaused i
 
 move :: forall a. Movement -> State a -> State a
 move target state = traceAny {target,state} $ \_ -> spy $ State (move' target (stateProps state))
@@ -121,12 +133,19 @@ getValue' {compiled: Compiled {steps,lookupStep,value: Tween evalTween},stepStat
   evalTween getProgress
   where
     t = case stepState of
-      StepPaused i -> toNumber (i+1)
-      StepTrans {stepIndex,progress} -> traceAny {stepIndex,progress} $ \_ -> toNumber stepIndex + progress
-    getProgress i = (t - (lookupStep i # toNumber)) # clamp 0.0 1.0
+      StepPaused i -> Int.toNumber (i+1)
+      StepTrans {stepIndex,progress} -> traceAny {stepIndex,progress} $ \_ -> Int.toNumber stepIndex + progress
+    getProgress i = (t - (lookupStep i # Int.toNumber)) # clamp 0.0 1.0
 
 getValue :: forall a. State a -> a
 getValue state = getValue' (stateProps state)
+
+getStepIndex :: forall a. State a -> Int
+getStepIndex (State{stepState}) = case stepState of
+  StepPaused i -> i
+  StepTrans {progress,stepIndex,direction} -> case direction of 
+    Forward -> stepIndex
+    Reverse -> max (stepIndex - 1) 0
 
 -- data Query n
 --   = Move Movement n

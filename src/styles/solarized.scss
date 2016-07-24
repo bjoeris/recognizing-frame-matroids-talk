@@ -1,0 +1,60 @@
+@import "settings";
+@import url(fonts/league-gothic/league-gothic.css);
+@import url(fonts/Lato/Lato.css);
+// @import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic);
+@import url(fonts/Roboto/Roboto.css);
+// @import url(https://fonts.googleapis.com/css?family=Roboto:400,700,400italic,700italic);
+@import url(fonts/News_Cycle/News_Cycle.css);
+// @import url(https://fonts.googleapis.com/css?family=News+Cycle:400,700,400italic,700italic);
+
+html * {
+  color-profile: sRGB;
+  rendering-intent: auto; }
+
+/**
+ * Solarized colors by Ethan Schoonover
+ */
+html * {
+	color-profile: sRGB;
+	rendering-intent: auto;
+}
+
+// Solarized colors
+$base03:    #002b36;
+$base02:    #073642;
+$base01:    #586e75;
+$base00:    #657b83;
+$base0:     #839496;
+$base1:     #93a1a1;
+$base2:     #eee8d5;
+$base3:     #fdf6e3;
+$yellow:    #b58900;
+$orange:    #cb4b16;
+$red:       #dc322f;
+$magenta:   #d33682;
+$violet:    #6c71c4;
+$blue:      #268bd2;
+$cyan:      #2aa198;
+$green:     #859900;
+
+// Override theme settings (see ../template/settings.scss)
+$mainColor: $base02;
+$headingColor: $base03;
+$headingTextShadow: none;
+$headingFont: 'News Cycle';
+$backgroundColor: $base3;
+$linkColor: $blue;
+$linkColorHover: lighten( $linkColor, 20% );
+$selectionBackgroundColor: $magenta;
+
+$emphColor: $green;
+$speakerColor: $green;
+
+$headingScale: 0.4;
+
+$heading1Size: $heading1Size * $headingScale;
+$heading2Size: $heading2Size * $headingScale;
+$heading3Size: $heading3Size * $headingScale;
+$heading4Size: $heading4Size * $headingScale;
+
+@import "theme";

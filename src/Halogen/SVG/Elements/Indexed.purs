@@ -56,6 +56,18 @@ type CircleAttributes =
 circle :: forall p i. Node CircleAttributes p i
 circle = refine E.circle
 
+type RectAttributes =
+  GlobalAttributes
+  ( x :: I
+  , y :: I
+  , width :: I
+  , height :: I
+  , rx :: I
+  , ry :: I
+  , transform :: I )
+rect :: forall p i. Node RectAttributes p i
+rect = refine E.rect
+
 type DefsAttributes =
   GlobalAttributes
   ( cx :: I

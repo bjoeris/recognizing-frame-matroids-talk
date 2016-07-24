@@ -8,14 +8,17 @@ var config
                  , port: 4008
                  , stats: 'errors-only'
                  }
-    , output: { path: __dirname
+    , output: { path: './assets'
               , pathinfo: true
-              , publicPath: "/assets"
+              , publicPath: '/assets'
               , filename: 'bundle.js'
               }
     , module: { loaders: [ { test: /\.purs$/
                            , loader: 'purs-loader'
-                           , query: { src: [ 'bower_components/purescript-*/src/**/*.purs', 'src/**/*.purs' ]
+                           , query: { src: [ 'lib/purescript-*/src/**/*.purs'
+                                           , 'bower_components/purescript-*/src/**/*.purs'
+                                           , 'src/**/*.purs' 
+                                           ]
                                     , bundle: false
                                     , psc: 'psa'
                                     , pscArgs: { sourceMaps: true }
@@ -27,10 +30,18 @@ var config
                            , loader: 'source-map-loader'
                            , exclude: /node_modules|bower_components/
                            }
+                         , { test: /\.scss$/
+                           , loaders: ["style", "css", "sass"]
+                           }  
+                         , { test: /\.css$/
+                           , loaders: ["style", "css"]
+                           }  
+                         , { test: /\.(woff|ttf|eot)/
+                           , loader: 'url-loader'}
                          ]
               }
-    , resolve: { modulesDirectories: [ 'node_modules', 'bower_components' ]
-               , extensions: [ '', '.purs', '.js']
+    , resolve: { modulesDirectories: [ 'lib', 'node_modules', 'bower_components' ]
+               , extensions: [ '', '.purs', '.js', '.css']
                }
     }
     ;

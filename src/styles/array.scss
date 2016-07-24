@@ -1,0 +1,11 @@
+
+$maxRows: 20;
+$maxCols: 20;
+
+@for $i from 1 through $maxRows {
+    @for $j from 1 through $maxCols {
+        .highlight-array-#{$i}-#{$i} { 
+            width: 2em * $i; 
+        }
+    }
+}

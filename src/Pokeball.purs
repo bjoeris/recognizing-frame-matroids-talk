@@ -7,7 +7,7 @@ import Data.Array as Array
 import Data.Time.Duration (Milliseconds, Seconds(Seconds))
 
 import Halogen.HTML (HTML())
-import Halogen.CSS.Units
+import Halogen.CSS.Units (rem)
 import Halogen.SVG.Elements.Indexed as SVG
 import Halogen.SVG.Properties.Indexed as SVG
 import Halogen.SVG.Elements.Indexed
@@ -28,7 +28,7 @@ import Halogen.HTML.Properties.Tweened (tweenProp)
 -- import Halogen.SVG.Elements.Indexed as I
 -- import Halogen.SVG.Properties.Indexed as I
 -- import Halogen.HTML.Styles.Indexed as I
-import Halogen.SVG.Properties (round,PreserveAspectRatio(Mid),userSpaceOnUse)
+import Halogen.SVG.Properties (round,Align(Mid),userSpaceOnUse)
 
 import Timeline.Build as Timeline
 import Timeline.Tween as Timeline
@@ -50,12 +50,12 @@ pokeball =
     Timeline.newStep <*>
     Timeline.newStep' Timeline.StepEnd (Seconds 1.0) 
   where
-  width = 500.0
-  height = 500.0
+  width = 50.0 # rem
+  height = 50.0 # rem
   rotation = D3.rotation (-15.0) 100.0 0.0
   radius = 0.95
-  buttonRadius = 10.0
-  vertexRadius = 4.0
+  buttonRadius = 15.0
+  vertexRadius = 6.0
   edgeWidth = 0.04
   hiddenEdgeWidth = 0.005
   projection = geoOrthographic 
@@ -86,8 +86,9 @@ pokeball =
     let face1CenterY = -70.0 * (1.0 - t4)
         face1Center = coord 0.0 face1CenterY
         distRad = geoDistance face1Center vertex1Center
-        vertex4Center = coord 0.0 (2.0 * face1CenterY + 93.0)
-        face1Geo = geoCircle face1Center (distRad * 180.0 / pi)
+        distDeg = distRad * 180.0 / pi
+        vertex4Center = coord 0.0 (face1CenterY + distDeg)
+        face1Geo = geoCircle face1Center distDeg
         path1Geo = LineString $ case face1Geo of
           Polygon c -> Array.index c 0 # fromMaybe []
           _ -> []
@@ -99,7 +100,9 @@ pokeball =
         path3 = pathGen $ LineString [ vertex3Center, vertex4Center ]
         vertexPaths = map (\v -> 
           path [d $ pathGen $ geoCircle v vertexRadius
-               , fill "black"] [])
+               , fill "black"
+               , stroke white
+               , strokeWidth (edgeWidth / 4.0)] [])
           [ vertex1Center
           , vertex2Center
           , vertex3Center
@@ -117,7 +120,7 @@ pokeball =
     pure $ svg [ SVG.width width, 
                  SVG.height height, 
                  viewBox (-1.0) (-1.0) 2.0 2.0, 
-                 preserveAspectRatio Mid Mid ]
+                 preserveAspectRatio {defer: false, align: Just {x:Mid, y:Mid}, meetOrSlice: Nothing} ]
       [ defs [] 
         [ E.filter [id "f1", x 0.0, y 0.0] 
           [ feGaussianBlur [in_ "SourceGraphic", stdDeviation 0.1] [] ]
@@ -134,8 +137,8 @@ pokeball =
 
       , path [d face1, fill white] []
       , path [d face1, fill red, opacity t3] []
-      , path [d backPath1, stroke "black", strokeWidth hiddenEdgeWidth, opacity 0.3, fill "none"] []
-      , path [d path1, stroke "black", strokeWidth edgeWidth, strokeLinecap round, fill "none"] []
+      --, path [d backPath1, stroke "black", strokeWidth hiddenEdgeWidth, opacity 0.3, fill "none"] []
+      , path [d path1, stroke "black", strokeWidth edgeWidth, strokeLinecap round, fill "none", P.clipPath "url(#clip-sphere)"] []
 
       , path [d face2, fill white] []
       , path [d face2, fill red, opacity (t1-t2)] []

@@ -3,12 +3,13 @@ module Main where
 import Prelude
 
 import Control.Monad.Eff (Eff)
-import Control.Monad.Aff (Aff)
+import Control.Monad.Aff (Aff, forkAff)
 import Control.Monad.Aff.AVar (AVAR)
+import Control.Monad.Eff.Exception (EXCEPTION)
 
 import DOM (DOM)
 import DOM.HTML (window) as DOM
-import DOM.HTML.Types (htmlDocumentToDocument) as DOM
+import DOM.HTML.Types (htmlDocumentToDocument, htmlElementToElement) as DOM
 import DOM.HTML.Window (document) as DOM
 
 import Halogen as H
@@ -18,7 +19,7 @@ import Halogen.HTML.Indexed as HH
 import Halogen.HTML.Properties.Indexed (IProp(), I(), InteractiveEvents, GlobalProperties)
 import Halogen.HTML.Properties.Tweened (ttweenProp)
 import Halogen.Query.EventSource as ES
-import Halogen.Util (awaitBody, runHalogenAff)
+import Halogen.Util (awaitBody, runHalogenAff, selectElement)
 
 import Keyboard as K
 import RequestAnimationFrame as A
@@ -29,21 +30,28 @@ import Data.Functor.Coproduct (Coproduct, left, right)
 import Data.Maybe (Maybe(Just,Nothing))
 import Data.Time.Duration (Milliseconds, Seconds(Seconds))
 import Data.Traversable (sequence)
+import Data.Tuple (Tuple(Tuple))
+
+import Routing as R
+import Routing.Match as R
+import Routing.Match.Class as R
+import Routing.Hash as R
 
 import Timeline.Build as Timeline
 import Timeline.Tween as Timeline
 import Timeline.Compile as Timeline
 import Timeline.Run as Timeline
 import Timeline.Tween (TTween, ttween')
+import Timeline.Slides (fade, FadeDirection(FadeIn,FadeOut), slides)
 -- import Timeline.Dom (text,div,tweenStyle,tweenOpacity)
 
 import Halogen.HTML.Styles.Indexed as I
 import Halogen.HTML.Elements.Tweened (div, text)
 import Halogen.HTML.Styles.Tweened
 
-import Pokeball
+import Slides as Slides
 
-import D3.Geo
+import KaTeX as KaTeX
 
 import Debug.Trace
 
@@ -57,12 +65,16 @@ type State = Timeline.State (H.ComponentHTML Query)
 timeline :: forall b. TTween b (H.ComponentHTML Query)
 timeline = do
   i0 <- Timeline.newStep
+  res <- slides Slides.slides
+  Timeline.newStep
+  pure $ res
   --opacityTween <- tween (\t -> "opacity: " <> show t)
-  div [backgroundColor "lightblue"] 
+  {-i1 <- Timeline.newStep
+  fade FadeIn i1 $ div [] 
     [ div [ttweenProp I.opacity (\t -> t)]
         [ text "hello" ]
     , div [] [ pokeball ]
-    ]
+    ]-}
   -- styleTween <- style <$> opacityTween
   -- attributes <- sequence $ sequence [styleTween] 
   -- pure $ (HH.div <$> attributes
@@ -87,6 +99,7 @@ ui = H.lifecycleComponent { render, eval, initializer, finalizer: Nothing }
   eval :: Query ~> H.ComponentDSL State Query (Aff (E eff))
   eval (Init next) = do
     document <- H.fromEff $ DOM.window >>= DOM.document <#> DOM.htmlDocumentToDocument
+
     let
       keyboardSource :: H.EventSource (Coproduct (Const Unit) Query) (Aff (E eff))
       keyboardSource =
@@ -103,46 +116,40 @@ ui = H.lifecycleComponent { render, eval, initializer, finalizer: Nothing }
           pure $ H.action (Tick dt)
     H.subscribe $ ES.catEventSource keyboardSource
     H.subscribe animationFrameSource
+    body <- H.fromAff (selectElement "body") <#> (map DOM.htmlElementToElement)
+    case body of
+      Nothing -> pure unit
+      Just b -> H.fromEff $ KaTeX.renderMathInElement b KaTeX.optionsWithDollar
     pure next
   eval (Move target next) = do
     H.modify (Timeline.move target)
+    i <- H.gets Timeline.getStepIndex
+    H.fromEff (R.setHash ("/" <> (show i)))
     pure next
   eval (Tick dt next) = do
     H.modify (Timeline.tick dt)
     pure next
+    
+data Routes = RouteSlide Number
 
--- data Query a = ToggleState a
+routing :: R.Match Routes
+routing = RouteSlide <$> (R.lit "" *> R.num)
 
--- type State = { on :: Boolean }
+routeSignal :: forall eff. H.Driver Query eff
+            -> Aff (dom :: DOM, avar :: AVAR, err :: EXCEPTION | eff) Unit
+routeSignal driver = do
+  Tuple old new <- R.matchesAff routing
+  redirects driver old new
 
--- initialState :: State
--- initialState = { on: false }
-
--- ui :: forall g. H.Component State Query g
--- ui = H.component { render, eval }
---   where
---   render :: State -> H.ComponentHTML Query
---   render state =
---     HH.div [style "background: red"]
---       [ HH.h1_
---           [ HH.text "Hello world!2" ]
---       , HH.p_
---           [ HH.text "Why not toggle this button:" ]
---       , HH.button
---           [ HE.onClick (HE.input_ ToggleState) ]
---           [ HH.text
---               if not state.on
---               then "Don't push me"
---               else "I said don't push me!"
---           ]
---       ]
-
---   eval :: Query ~> H.ComponentDSL State Query g
---   eval (ToggleState next) = do
---     H.modify (\state -> { on: not state.on })
---     pure next
+redirects :: forall eff. H.Driver Query eff
+          -> Maybe Routes
+          -> Routes
+          -> Aff (dom :: DOM, avar :: AVAR, err :: EXCEPTION | eff) Unit
+redirects driver _ (RouteSlide t) = do
+  driver (H.action (Move (Timeline.MoveTo t Timeline.Forward)))
 
 main :: Eff (H.HalogenEffects (keyboard :: K.KEYBOARD)) Unit
 main = runHalogenAff do
   body <- awaitBody
-  H.runUI ui initialState body
+  driver <- H.runUI ui initialState body
+  forkAff $ routeSignal driver

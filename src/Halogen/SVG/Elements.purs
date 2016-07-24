@@ -27,6 +27,9 @@ g = element "g"
 circle :: forall p i. Array (Prop i) -> Array (SVG p i) -> SVG p i
 circle = element "circle"
 
+rect :: forall p i. Array (Prop i) -> Array (SVG p i) -> SVG p i
+rect = element "rect"
+
 defs :: forall p i. Array (Prop i) -> Array (SVG p i) -> SVG p i
 defs = element "defs"
 

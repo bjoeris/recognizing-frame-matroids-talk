@@ -16,6 +16,16 @@ data Em
 instance isUnitEm :: IsUnit Em where
   unitSuffix = UnitSuffix "em"
 
+em :: Number -> Length Em
+em = Length
+
+data Rem 
+instance isUnitRem :: IsUnit Rem where
+  unitSuffix = UnitSuffix "rem"
+
+rem :: Number -> Length Rem
+rem = Length
+
 data Px
 
 instance isUnitPx :: IsUnit Px where
@@ -23,6 +33,14 @@ instance isUnitPx :: IsUnit Px where
 
 px :: Number -> Length Px
 px = Length
+
+data Percent
+
+instance isUnitPercent :: IsUnit Percent where
+  unitSuffix = UnitSuffix "%"
+
+percent :: Number -> Length Percent
+percent = Length
 
 data Length u = Length Number
 

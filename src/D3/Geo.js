@@ -94,4 +94,13 @@ exports.projectionImpl = function(value) {
     });
 };
 
-exports.pathStringImpl = getValue;
+exports.pathStringImpl = function(path) {
+    path = getValue(path);
+    return function(geo) {
+        var value = path(geo);
+        if (typeof(value) !== 'string') {
+            return "";
+        }
+        return value;
+    }
+}

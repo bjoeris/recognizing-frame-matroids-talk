@@ -18,6 +18,9 @@ path = ttweenNode I.path
 circle :: forall b p i. Node b I.CircleAttributes p i
 circle = ttweenNode I.circle
 
+rect :: forall b p i. Node b I.RectAttributes p i
+rect = ttweenNode I.rect
+
 defs :: forall b p i. Node b I.DefsAttributes p i
 defs = ttweenNode I.defs
 

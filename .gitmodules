@@ -1,0 +1,6 @@
+[submodule "lib/purescript-halogen"]
+	path = lib/purescript-halogen
+	url = https://github.com/slamdata/purescript-halogen.git
+[submodule "lib/KaTeX"]
+	path = lib/KaTeX
+	url = https://github.com/Khan/KaTeX.git

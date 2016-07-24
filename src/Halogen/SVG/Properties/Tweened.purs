@@ -14,6 +14,9 @@ import Halogen.CSS.Colors (class IsColor)
 
 import Timeline.Tween (TTween)
 
+class_ :: forall b r i. String -> TTween b (IProp ( class :: I | r) i)
+class_ = I.class_ >>> pure >>> pure
+
 d :: forall b r i. String -> TTween b (IProp ( d :: I | r) i)
 d = I.d >>> pure >>> pure
 
@@ -34,6 +37,9 @@ height = I.height >>> pure >>> pure
 
 fill :: forall b v r i. IsColor v => v -> TTween b (IProp ( fill :: I | r) i)
 fill = I.fill >>> pure >>> pure
+
+fillOpacity :: forall b r i. Number -> TTween b (IProp ( fillOpacity :: I | r) i)
+fillOpacity = I.fillOpacity >>> pure >>> pure
 
 stroke :: forall b v r i. IsColor v => v -> TTween b (IProp ( stroke :: I | r) i)
 stroke = I.stroke >>> pure >>> pure
@@ -67,3 +73,9 @@ strokeLinecap = I.strokeLinecap >>> pure >>> pure
 
 strokeLinejoin :: forall b r i. P.Linejoin -> TTween b (IProp (strokeLinejoin :: I | r) i)
 strokeLinejoin = I.strokeLinejoin >>> pure >>> pure
+
+preserveAspectRatio :: forall b r i. P.PreserveAspectRatio -> TTween b (IProp (preserveAspectRatio :: I | r) i)
+preserveAspectRatio = I.preserveAspectRatio >>> pure >>> pure
+
+viewBox :: forall b r i. Number -> Number -> Number -> Number -> TTween b (IProp (viewBox :: I | r) i)
+viewBox x y width height = I.viewBox x y width height # pure # pure

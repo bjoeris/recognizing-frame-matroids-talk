@@ -7,6 +7,7 @@ import Halogen.HTML.Styles.Indexed as I
 import Halogen.HTML.Indexed as HH
 
 import Halogen.CSS.Colors (class IsColor, toColorString)
+import Halogen.CSS.Units (class IsLength, toLengthString)
 
 import Timeline.Tween (TTween)
 
@@ -20,3 +21,41 @@ opacity = I.opacity >>> pure >>> pure
 
 backgroundColor :: forall v b r i. (IsColor v) => v -> StyleProp b r i
 backgroundColor = I.backgroundColor >>> pure >>> pure
+
+type Position = I.Position
+
+static :: Position
+static = I.static
+
+relative :: Position
+relative = I.relative
+
+absolute :: Position
+absolute = I.absolute
+
+fixed :: Position
+fixed = I.fixed
+
+sticky :: Position
+sticky = I.sticky
+
+position :: forall b r i. Position -> StyleProp b r i
+position = I.position >>> pure >>> pure
+
+width :: forall v b r i. IsLength v => v -> StyleProp b r i
+width = I.width >>> pure >>> pure
+
+height :: forall v b r i. IsLength v => v -> StyleProp b r i
+height = I.height >>> pure >>> pure
+
+left :: forall v b r i. IsLength v => v -> StyleProp b r i
+left = I.left >>> pure >>> pure
+
+right :: forall v b r i. IsLength v => v -> StyleProp b r i
+right = I.right >>> pure >>> pure
+
+top :: forall v b r i. IsLength v => v -> StyleProp b r i
+top = I.top >>> pure >>> pure
+
+bottom :: forall v b r i. IsLength v => v -> StyleProp b r i
+bottom = I.bottom >>> pure >>> pure
