@@ -43,3 +43,6 @@ tweenProp id mkProp val =
 
 class_ :: forall b r i. ClassName -> TTween b (IProp ("class" :: I | r) i)
 class_ = I.class_ >>> pure >>> pure
+
+src :: forall b r i. String -> TTween b (IProp (src :: I | r) i)
+src = I.src >>> pure >>> pure

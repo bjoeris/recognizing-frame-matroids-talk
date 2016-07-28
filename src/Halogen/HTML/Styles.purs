@@ -58,6 +58,18 @@ top = lengthStyle "top"
 bottom :: forall v i. IsLength v => v -> Prop i
 bottom = lengthStyle "bottom"
 
+marginLeft :: forall v i. IsLength v => v -> Prop i
+marginLeft = lengthStyle "margin-left"
+
+marginRight :: forall v i. IsLength v => v -> Prop i
+marginRight = lengthStyle "margin-right"
+
+marginTop :: forall v i. IsLength v => v -> Prop i
+marginTop = lengthStyle "margin-top"
+
+marginBottom :: forall v i. IsLength v => v -> Prop i
+marginBottom = lengthStyle "marginBottom"
+
 data Position
   = Static
   | Relative

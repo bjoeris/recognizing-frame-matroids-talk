@@ -54,3 +54,15 @@ top = refine P.top
 
 bottom :: forall v r i. IsLength v => v -> IProp ( style :: I | r) i
 bottom = refine P.bottom
+
+marginLeft :: forall v r i. IsLength v => v -> IProp ( style :: I | r) i
+marginLeft = refine P.marginLeft
+
+marginRight :: forall v r i. IsLength v => v -> IProp ( style :: I | r) i
+marginRight = refine P.marginRight
+
+marginTop :: forall v r i. IsLength v => v -> IProp ( style :: I | r) i
+marginTop = refine P.marginTop
+
+marginBottom :: forall v r i. IsLength v => v -> IProp ( style :: I | r) i
+marginBottom = refine P.marginBottom

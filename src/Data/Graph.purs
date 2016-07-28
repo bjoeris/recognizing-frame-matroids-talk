@@ -4,7 +4,7 @@ import Prelude
 
 import Data.Traversable
 
-import Data.Maybe (Maybe)
+import Data.Maybe (Maybe(Nothing,Just))
 import Data.Tuple (Tuple(Tuple))
 import Data.StrMap as StrMap
 import Data.StrMap (StrMap)
@@ -108,6 +108,15 @@ lookupV v g = StrMap.lookup (unVertex v) g.vertices
 
 lookupE :: forall v e. Edge -> Graph v e -> Maybe e
 lookupE e g = StrMap.lookup (unEdge e) g.edges
+
+incidentEdges :: forall v e. Vertex -> Graph (V v) (E e) -> Array {id :: Edge, source :: V v, target :: V v | e}
+incidentEdges v g = edgeArray g # (Array.mapMaybe $ \e ->
+  if e.source /= v && e.target /= v
+  then Nothing
+  else do
+    source' <- lookupV e.source g
+    target' <- lookupV e.target g
+    pure e{source = source', target=target'})
 
 edgeContext :: forall v e. Edge -> Graph v { source :: Vertex, target :: Vertex | e} -> Maybe { source :: v, target :: v | e}
 edgeContext e g = do

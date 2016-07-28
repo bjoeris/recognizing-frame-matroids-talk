@@ -14,13 +14,13 @@ type LinkOptions v e =
 linkOptions :: forall v e. LinkOptions v e
 linkOptions = { distance: \_ _ _ -> 30.0 }
 
-foreign import linkNodes :: forall v e. LinkOptions v e -> Int -> Array (PV v) -> Array e -> Array (PV v)
+foreign import link :: forall v e. LinkOptions v e -> Array e -> Force v
 
-link :: forall v e. LinkOptions (id :: Vertex | v) e -> Int -> Force (id :: Vertex | v) e
-link opt numIterations g = g
-  { vertices = vertices' 
-      <#> (\v -> Tuple (unVertex v.id) v)
-      # StrMap.fromFoldable
-  }
-  where 
-  vertices' = linkNodes opt numIterations (vertexArray g) (edgeArray g)
+-- link :: forall v e. LinkOptions (id :: Vertex | v) e -> Int -> Force (id :: Vertex | v) e
+-- link opt numIterations g = g
+--   { vertices = vertices' 
+--       <#> (\v -> Tuple (unVertex v.id) v)
+--       # StrMap.fromFoldable
+--   }
+--   where 
+--   vertices' = linkNodes opt numIterations (vertexArray g) (edgeArray g)

@@ -46,7 +46,7 @@ compile tt = Compiled
         i <- Array.findLastIndex (\step -> step.id == id) prevSteps
         Array.insertAt (i+1) step prevSteps
     n = Array.length steps
-    slowLookup i = traceAny {slowLookup: i, steps} $ \_ -> Array.findIndex (\step -> step.id == StepId i) steps
+    slowLookup i = Array.findIndex (\step -> step.id == StepId i) steps
       # unsafeFromMaybeWith "error constructing step lookup table"
     lookupArr = map slowLookup (Array.range 0 (n-1))
 

@@ -16,8 +16,6 @@ import DOM.HTML.Types (Window())
 
 import Data.Time.Duration (Milliseconds(Milliseconds), class Duration, toDuration)
 
-import Debug.Trace (traceAnyA, spy)
-
 -- | Request the specified action be called on the next animation frame, specifying the `Window` object.
 foreign import requestAnimationFrameImpl :: forall a eff. Window -> (Number -> Eff (dom :: DOM | eff) a) -> Eff (dom :: DOM | eff) Unit
 

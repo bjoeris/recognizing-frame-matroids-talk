@@ -42,7 +42,10 @@ body {
 }
 
 .slide-content {
-    margin: $slideMargin;
+    margin-top: $slideMargin;
+    margin-left: $slideMargin;
+    margin-right: $slideMargin;
+    margin-bottom: $slideMargin*5;
     text-align: center;
 }
 
@@ -221,4 +224,11 @@ span.highlight-blue {
 span.highlight-green {
     font-style: italic;
     color: $green;
+}
+ul {
+    margin-top: 0.1rem;
+}
+.katex {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
 }

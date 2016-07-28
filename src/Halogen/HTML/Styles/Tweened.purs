@@ -59,3 +59,15 @@ top = I.top >>> pure >>> pure
 
 bottom :: forall v b r i. IsLength v => v -> StyleProp b r i
 bottom = I.bottom >>> pure >>> pure
+
+marginLeft :: forall v b r i. IsLength v => v -> StyleProp b r i
+marginLeft = I.marginLeft >>> pure >>> pure
+
+marginRight :: forall v b r i. IsLength v => v -> StyleProp b r i
+marginRight = I.marginRight >>> pure >>> pure
+
+marginTop :: forall v b r i. IsLength v => v -> StyleProp b r i
+marginTop = I.marginTop >>> pure >>> pure
+
+marginBottom :: forall v b r i. IsLength v => v -> StyleProp b r i
+marginBottom = I.marginBottom >>> pure >>> pure

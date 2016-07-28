@@ -50,7 +50,7 @@ import Math (pi)
 
 forceTest :: forall b p i. TTween b (HTML p i)
 forceTest = 
-  forceTest' <$> Timeline.newStep' Timeline.StepEnd (Seconds 10.0)
+  forceTest' <$> Timeline.newStep' Timeline.StepEnd (Seconds 5.0)
 
   where
   size = 50.0
@@ -68,7 +68,7 @@ forceTest =
     }
   viewBox' = viewBox (-size/2.0) (-size/2.0) size size
 
-  iterations = 100
+  iterations = 1000
 
   -- g :: Graph (Graph.PV (id :: Graph.Vertex)) (Graph.PE ())
   g0 = Graph.mkRGraph
@@ -99,11 +99,17 @@ forceTest =
     # Graph.mapV (\v -> { id: v.id, x: v.x, y: v.y, radius: v.radius, classes: v.classes, vx: 0.0, vy: 0.0 })
   g' t = 
     let i = floor ((toNumber iterations) * t / 1.0)
-    in g0 # applyForce (manyBody manyBodyOptions i)
-        # applyForce (link linkOptions i)
+        f = manyBody manyBodyOptions 
+            <> link linkOptions (Graph.edgeArray g0)
+            <> dampVelocity 0.1
+            <> moveNodes
+    in g0 # applyForce (iterateForce i f)
         # Graph.autoTransform boundingBox
   g1 = g' 1.0
-  g t = interpolateGraphs g0 g1
+  g = Graph.interpolateGraphSeq 
+    [ {time: 0.0, value: g0}
+    , {time: 1.0, value: g1}
+    ]
     -- if t <= 0.0
     -- then g0
     -- else if t >= 1.0
@@ -111,6 +117,6 @@ forceTest =
     --      else g' t
 
   forceTest' step = do
-    t <- tween step (\t -> t)
+    t <- tween step (\t'->t')
     pure $ svg [SVG.width (size # rem), SVG.height (size # rem), viewBox']
       [ Graph.render (g t) ]

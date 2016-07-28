@@ -25,6 +25,11 @@ ttweenNode f attrs children = do
   children' <- sequence <$> sequence children
   pure $ f <$> attrs' <*> children'
 
+ttweenLeaf :: forall b a c r. (Array a -> r) -> Array (TTween b a) ->TTween b r
+ttweenLeaf f attrs = do
+  attrs' <- sequence <$> sequence attrs
+  pure $ f <$> attrs'
+
 text :: forall b p i. String -> TTween b (HH.HTML p i)
 text = HH.text >>> pure >>> pure
 
@@ -61,3 +66,20 @@ type LiProperties =
   ( value :: I, onScroll :: I )))
 li :: forall b p i. Node b LiProperties p i
 li = ttweenNode HH.li
+
+type ImgProperties = 
+  ( InteractiveEvents 
+  ( GlobalProperties 
+  ( alt :: I
+  , crossorigin :: I
+  , height :: I
+  , ismap :: I
+  , longdesc :: I
+  , onAbort :: I
+  , onError :: I
+  , onLoad :: I
+  , src :: I
+  , usemap :: I
+  , width :: I ) ) )
+img :: forall b p i. Leaf b ImgProperties p i
+img = ttweenLeaf HH.img

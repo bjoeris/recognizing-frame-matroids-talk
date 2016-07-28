@@ -33,7 +33,16 @@ instance bindTween :: Bind (Tween b) where
 instance monadTween :: Monad (Tween b)
 
 tween :: forall b a. StepId b -> (Number -> a) -> Tween b a
-tween i f = Tween (\progress -> f (progress i))
+tween i f = Tween (\progress -> f' (progress i))
+  where
+  f0 = f 0.0
+  f1 = f 1.0
+  f' t =
+    if t <= 0.0
+    then f0
+    else if t >= 1.0
+         then f1
+         else f t
 
 ttween' :: forall b a. StepId b -> (Number -> a) -> Timeline b (Tween b a)
 ttween' i f = pure $ tween i f
@@ -41,5 +50,4 @@ ttween' i f = pure $ tween i f
 ttween :: forall b a. (Number -> a) -> Timeline b (Tween b a)
 ttween f = do
   i <- newStep
-  traceAnyA i
   ttween' i f

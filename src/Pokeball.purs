@@ -48,42 +48,45 @@ pokeball =
     Timeline.newStep <*>
     Timeline.newStep <*>
     Timeline.newStep <*>
+    Timeline.newStep <*>
     Timeline.newStep' Timeline.StepEnd (Seconds 1.0) 
   where
   width = 50.0 # rem
   height = 50.0 # rem
-  rotation = D3.rotation (-15.0) 100.0 0.0
   radius = 0.95
   buttonRadius = 15.0
   vertexRadius = 6.0
   edgeWidth = 0.04
   hiddenEdgeWidth = 0.005
-  projection = geoOrthographic 
-    # translate (coord 0.0 0.0)
-    # scale radius
-    # clipAngle (Just 90.0)
-    # rotate rotation
-  backProjection = projection # clipAngle (Just 180.0)
-  pathGen = pathString (geoPath # D3.projection (Just projection))
-  backPathGen = pathString (geoPath # D3.projection (Just backProjection))
-  sphere = pathGen $ Sphere
-  vertex1Center = coord 90.0 (-90.0 + buttonRadius)
-  vertex2Center = coord (-90.0) (-90.0 + buttonRadius)
-  vertex3Center = coord 0.0 (-90.0 + buttonRadius)
   -- white = "white"
   -- red = "red"
   white = "url(#white-gradient)"
   red = "url(#red-gradient)"
 
-  pokeball' i0 i1 i2 i3 i4 = do
+  pokeball' i0 i2 i3 i4 i5 i6 = do
     t0 <- tween i0 (\t -> t)
-    t1 <- tween i1 (\t -> t)
+    --t1 <- tween i1 (\t -> t)
     t2 <- tween i2 (\t -> t)
     t3 <- tween i3 (\t -> t)
     t4 <- tween i4 (\t -> t)
+    t5 <- tween i5 (\t -> t)
+    t6 <- tween i6 (\t -> t)
     --face1Center <- tween i4 (\t -> coord 0.0 (-70.0 * (1.0 - t)))
 
-    let face1CenterY = -70.0 * (1.0 - t4)
+    let rotation = D3.rotation (-15.0) (80.0 + 20.0 * t6) 0.0
+        projection = geoOrthographic 
+          # translate (coord 0.0 0.0)
+          # scale radius
+          # clipAngle (Just 90.0)
+          # rotate rotation
+        backProjection = projection # clipAngle (Just 180.0)
+        pathGen = pathString (geoPath # D3.projection (Just projection))
+        backPathGen = pathString (geoPath # D3.projection (Just backProjection))
+        sphere = pathGen $ Sphere
+        vertex1Center = coord 90.0 (-90.0 + buttonRadius)
+        vertex2Center = coord (-90.0) (-90.0 + buttonRadius)
+        vertex3Center = coord 0.0 (-90.0 + buttonRadius)
+        face1CenterY = -70.0 * (1.0 - t6)
         face1Center = coord 0.0 face1CenterY
         distRad = geoDistance face1Center vertex1Center
         distDeg = distRad * 180.0 / pi
@@ -133,20 +136,20 @@ pokeball =
           [ stop [ offset 0.0, stopColor "#f8f8f8"] []
           , stop [ offset 1.0, stopColor "#909090"] [] ] ]
       , path [d sphere, fill white] []
-      , path [d sphere, fill red, opacity (t2-t3)] []
+      , path [d sphere, fill red, opacity (t3-t4)] []
 
       , path [d face1, fill white] []
-      , path [d face1, fill red, opacity t3] []
+      , path [d face1, fill red, opacity t2] []
       --, path [d backPath1, stroke "black", strokeWidth hiddenEdgeWidth, opacity 0.3, fill "none"] []
       , path [d path1, stroke "black", strokeWidth edgeWidth, strokeLinecap round, fill "none", P.clipPath "url(#clip-sphere)"] []
 
       , path [d face2, fill white] []
-      , path [d face2, fill red, opacity (t1-t2)] []
+      , path [d face2, fill red, opacity (t4-t5)] []
       , path [d path2, stroke "black", strokeWidth edgeWidth, fill "none"] []
 
       , path [d path3, stroke "black", strokeWidth edgeWidth, fill "none", opacity (1.0-t0)] []
       
-      , g [opacity (1.0-t4)] vertexPaths
+      , g [opacity (1.0-t6)] vertexPaths
       , path [d highlight, fill "white", opacity 0.9, P.filter "url(#f1)", P.clipPath "url(#clip-sphere)"] []
       --, path [d lowlight, fill "black", opacity 0.2, P.filter "url(#f1)", P.clipPath "url(#clip-sphere)"] []
       ]

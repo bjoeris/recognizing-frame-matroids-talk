@@ -24,7 +24,10 @@ slides =
       , instituteRef "2"
       , text "University of Waterloo"
       ]
-    , conference "2016 Workshop on Graphs and Matroids"
+    , conference 
+      [ div [] [ text "2016 International Workshop on Structure" ]
+      , div [] [ text "in Graphs and Matroids" ]
+      ]
     ]
   ]
 
@@ -51,5 +54,5 @@ institute ref inst = span [class_ ("institute")]
   [ instituteRef ref
   , text inst ]
 
-conference :: forall b p i. String -> TTween b (HTML p i)
-conference s = div [class_ ("conference")] [text s]
+conference :: forall b p i. Array (TTween b (HTML p i)) -> TTween b (HTML p i)
+conference c = div [class_ ("conference")] c

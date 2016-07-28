@@ -104,26 +104,27 @@ move target state = traceAny {target,state} $ \_ -> spy $ State (move' target (s
 
 tick' :: forall b a. Milliseconds -> StateProps b a -> StateProps b a
 tick' dt state =
-  {compiled: state.compiled, stepState} # clampState
+  case state.stepState of
+    StepPaused i -> state
+    StepTrans trans ->
+      {compiled: state.compiled, stepState: stepState trans} # clampState
   where
   cp = compiledProps (state.compiled)
-  stepState = case state.stepState of
-    StepPaused i -> state.stepState
-    StepTrans trans -> traceAny trans $ \_ ->
-      let d = case trans.direction of
-            Forward -> 1.0
-            Reverse -> -1.0
-          duration = trans.stepIndex
-            # Array.index cp.steps
-            # unsafeFromMaybeWith "error looking up step duration"
-            # \step -> step.duration
-          speed = d / (unMilliseconds duration)
-          progress = trans.progress + speed * (unMilliseconds dt) # clamp 0.0 1.0
-      in if progress <= 0.0 && d < 0.0
-          then StepPaused (trans.stepIndex - 1)
-          else if progress >= 1.0 && d > 0.0
-                then StepPaused trans.stepIndex
-                else StepTrans $ trans { progress = progress }
+  stepState trans =
+    let d = case trans.direction of
+          Forward -> 1.0
+          Reverse -> -1.0
+        duration = trans.stepIndex
+          # Array.index cp.steps
+          # unsafeFromMaybeWith "error looking up step duration"
+          # \step -> step.duration
+        speed = d / (unMilliseconds duration)
+        progress = trans.progress + speed * (unMilliseconds dt) # clamp 0.0 1.0
+    in if progress <= 0.0 && d < 0.0
+        then StepPaused (trans.stepIndex - 1)
+        else if progress >= 1.0 && d > 0.0
+              then StepPaused trans.stepIndex
+              else StepTrans $ trans { progress = progress }
 
 tick :: forall a. Milliseconds -> State a -> State a
 tick dt state = State (tick' dt (stateProps state))
@@ -134,7 +135,7 @@ getValue' {compiled: Compiled {steps,lookupStep,value: Tween evalTween},stepStat
   where
     t = case stepState of
       StepPaused i -> Int.toNumber (i+1)
-      StepTrans {stepIndex,progress} -> traceAny {stepIndex,progress} $ \_ -> Int.toNumber stepIndex + progress
+      StepTrans {stepIndex,progress} -> Int.toNumber stepIndex + progress
     getProgress i = (t - (lookupStep i # Int.toNumber)) # clamp 0.0 1.0
 
 getValue :: forall a. State a -> a

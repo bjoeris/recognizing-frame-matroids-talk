@@ -14,12 +14,12 @@ type ManyBodyOptions v =
 manyBodyOptions :: forall v. ManyBodyOptions v
 manyBodyOptions = { strength: \_ -> -30.0 }
 
-foreign import manyBodyNodes :: forall v. ManyBodyOptions v -> Int -> Array (PV v) -> Array (PV v)
+foreign import manyBody :: forall v. ManyBodyOptions v -> Force v
 
-manyBody :: forall v e. ManyBodyOptions (id :: Vertex | v) -> Int -> Force (id :: Vertex | v) e
-manyBody opt numIterations g = g
-  { vertices = vertexArray g 
-      # manyBodyNodes opt numIterations
-      <#> (\v -> Tuple (unVertex v.id) v)
-      # StrMap.fromFoldable
-  }
+-- manyBody :: forall v e. ManyBodyOptions (id :: Vertex | v) -> Int -> Force (id :: Vertex | v) e
+-- manyBody opt numIterations g = g
+--   { vertices = vertexArray g 
+--       # manyBodyNodes opt numIterations
+--       <#> (\v -> Tuple (unVertex v.id) v)
+--       # StrMap.fromFoldable
+--   }

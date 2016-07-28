@@ -81,7 +81,7 @@ timeline = do
   --   <*> pure [ HH.text "hello" ])
     
 initialState :: State
-initialState = spy $ Timeline.initialState timeline
+initialState = Timeline.initialState timeline
 
 -- | Effects embedding the Ace editor requires.
 type E eff = (dom :: DOM, avar :: AVAR, keyboard :: K.KEYBOARD | eff)
@@ -104,12 +104,21 @@ ui = H.lifecycleComponent { render, eval, initializer, finalizer: Nothing }
       keyboardSource :: H.EventSource (Coproduct (Const Unit) Query) (Aff (E eff))
       keyboardSource =
         H.eventSource (K.onKeyUp document) $ \e -> do
-          let info = K.readKeyboardEvent e
-          if info.keyCode == 37 -- Left Arrow
-            then pure $ H.action (right <<< Move Timeline.MoveReverse)
-            else if info.keyCode == 39 -- Right Arrow
-                  then pure $ H.action (right <<< Move Timeline.MoveForward)
-                  else pure $ left (Const unit)
+          let info = spy $ K.readKeyboardEvent e
+          case info.keyCode of
+            -- Left Arrow	
+            37 ->  pure $ H.action (right <<< Move Timeline.MoveReverse)
+            -- Right Arrow
+            39 -> pure $ H.action (right <<< Move Timeline.MoveForward)
+            -- Left Arrow	
+            33 ->  pure $ H.action (right <<< Move Timeline.MoveReverse)
+            -- Right Arrow
+            34 -> pure $ H.action (right <<< Move Timeline.MoveForward)
+            -- Home
+            36 -> pure $ H.action (right <<< Move Timeline.MoveBegin)
+            -- End
+            35 -> pure $ H.action (right <<< Move Timeline.MoveEnd)
+            _ -> pure $ left (Const unit)
       animationFrameSource :: H.EventSource Query (Aff (E eff))
       animationFrameSource =
         H.eventSource A.onAnimationFrameDelta $ \dt ->

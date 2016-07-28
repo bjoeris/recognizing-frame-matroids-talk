@@ -1,6 +1,7 @@
 module Slides.Util 
   ( slide
   , p_
+  , li_
   , emph
   , redText
   , blueText
@@ -12,9 +13,12 @@ module Slides.Util
   , slideTitle
   , slideTitle'
   , lemma
+  , theorem
+  , namedTheorem
   , module Halogen.HTML
   , module Halogen.HTML.Elements.Tweened
   , module Halogen.HTML.Styles.Tweened
+  , module Halogen.HTML.Properties.Tweened
   , module Halogen.SVG.Elements
   , module Halogen.SVG.Elements.Tweened
   , module Halogen.SVG.Properties.Tweened
@@ -28,7 +32,7 @@ module Slides.Util
   , module Data.Monoid
   ) where
 
-import Prelude hiding (id)
+import Prelude hiding (id, bottom)
 
 import Halogen.HTML(HTML(), ClassName(), className)
 import Halogen.HTML.Elements.Tweened
@@ -38,6 +42,10 @@ import Halogen.HTML.Elements.Tweened
   , p
   , ul
   , li
+  , img
+  )
+import Halogen.HTML.Properties.Tweened
+  ( src
   )
 import Halogen.HTML.Styles.Tweened
   ( opacity
@@ -48,6 +56,12 @@ import Halogen.HTML.Styles.Tweened
   , right
   , top
   , bottom
+  , width
+  , height
+  , marginLeft
+  , marginRight
+  , marginBottom
+  , marginTop
   )
 
 import Halogen.SVG.Elements.Tweened
@@ -85,6 +99,9 @@ slide = div []
 
 p_ :: forall b p i. String -> TTween b (HTML p i)
 p_ s = p [] [text s]
+
+li_ :: forall b p i. String -> TTween b (HTML p i)
+li_ s = li [] [text s]
 
 emph :: forall b p i. String -> TTween b (HTML p i)
 emph s = span [class_ "emph"] [text s]
@@ -124,3 +141,18 @@ lemma :: forall b p i. Array (TTween b (HTML p i)) -> TTween b (HTML p i)
 lemma c = p [class_ "theorem"] $
   [ p [class_ "theorem-title"] [text "Lemma. "] ]
   <> c
+
+theorem :: forall b p i. Array (TTween b (HTML p i)) -> TTween b (HTML p i)
+theorem c = p [class_ "theorem"] $
+  [ p [class_ "theorem-title"] [text "Theorem. "] ]
+  <> c
+
+namedTheorem :: forall b p i. String -> Array (TTween b (HTML p i)) -> TTween b (HTML p i)
+namedTheorem name c = p [class_ "theorem"] $
+  [ p [class_ "theorem-title"]
+    [ text "Theorem "
+    , span [class_ "theorem-name"] 
+      [ text $ "(" <> name <> ")" ]
+    , text ". "
+    ]
+  ] <> c

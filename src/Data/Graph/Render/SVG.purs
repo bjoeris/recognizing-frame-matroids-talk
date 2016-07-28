@@ -237,13 +237,14 @@ autoTransform bounds g = fromMaybe g $ do
 interpolateGraphs :: forall v e.  Graph (RV v) (RE e) -> Graph (RV v) (RE e) -> Number -> Graph (RV v) (RE e)
 interpolateGraphs g1 g2 t = mergeVertices interpolateVertices g1 g2
   where
+  interpolateVertices :: Maybe (RV v) -> Maybe (RV v) -> Maybe (RV v)
   interpolateVertices Nothing Nothing = Nothing
   interpolateVertices (Just v) Nothing = Just v
   interpolateVertices Nothing (Just v) = Just v
   interpolateVertices (Just v1) (Just v2) = Just v1
     { x = (1.0 - t) * v1.x + t * v2.x
     , y = (1.0 - t) * v1.y + t * v2.y
-    , r = (1.0 - t) * v1.r + t * v2.r
+    , radius = (1.0 - t) * v1.radius + t * v2.radius
     }
 
 interpolateSeq :: forall a.
@@ -265,7 +266,7 @@ interpolateSeq interpolate frames now =
     pure $ Just $ interpolate v1 v2 now'
 
 interpolateGraphSeq :: forall v e. 
-  Array {time :: Number, graph :: Graph (RV v) (RE e)} -> 
-  Number -> Graph (RV v)
-interpolateGraphSeq now graphs = 
-  fromMaybe emptyGraph $ interpolateSeq interpolateGraphs
+  Array {time :: Number, value :: Graph (RV v) (RE e)} -> 
+  Number -> Graph (RV v) (RE e)
+interpolateGraphSeq graphs now = 
+  fromMaybe emptyGraph $ interpolateSeq interpolateGraphs graphs now
