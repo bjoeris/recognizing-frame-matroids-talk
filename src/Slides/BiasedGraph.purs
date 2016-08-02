@@ -4,6 +4,7 @@ import Prelude hiding (div)
 import Slides.Util
 import Data.Graph as Graph
 import Data.Graph.Render.SVG as Graph
+import Halogen.HTML.Styles.Tweened as Styles
 import Pokeball (pokeball)
 
 import Debug.Trace as Debug
@@ -157,7 +158,7 @@ bicircular = do
     [ slideTitle "Bicircular matroids"
     , p_ "$X\\subseteq E$ independent $\\Leftrightarrow$ each component of $G[X]$ has at most one cycle"
     , wideOverlayParent
-      [ fadeOut' i4 $ svg [width (size # rem), height (size # rem), viewBox'] $
+      [ fadeOut' i4 $ svg [Styles.width (size # rem), Styles.height (size # rem), viewBox'] $
         -- [ pure $ pure $ Graph.render $ g0
         -- ]
         [ fadeOut' i1 $ pure $ pure $ Graph.render $ g0
@@ -297,7 +298,7 @@ signedGraphs = do
         [ text "$X\\subseteq E$ independent $\\Leftrightarrow$ each component of $G[X]$ has no balanced cycle, and at most one unbalanced cycle" ]
       ]
     , wideOverlayParent
-      [ svg [width (size # rem), height (size # rem), viewBox'] $
+      [ svg [Styles.width (size # rem), Styles.height (size # rem), viewBox'] $
         -- [ pure $ pure $ Graph.render $ g0
         -- ]
         [ fadeInOut' j1 j2 $ fadeOut' i1 $ pure $ pure $ Graph.render $ g0

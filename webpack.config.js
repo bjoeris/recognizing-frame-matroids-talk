@@ -19,7 +19,7 @@ var config
                                            , 'bower_components/purescript-*/src/**/*.purs'
                                            , 'src/**/*.purs' 
                                            ]
-                                    , bundle: false
+                                    , bundle: true
                                     , psc: 'psa'
                                     , pscArgs: { sourceMaps: true }
                                     , pscIde: true
@@ -36,7 +36,7 @@ var config
                          , { test: /\.css$/
                            , loaders: ["style", "css"]
                            }  
-                         , { test: /\.(woff|ttf|eot)/
+                         , { test: /\.(woff|ttf|eot|svg)/
                            , loader: 'url-loader'}
                          ]
               }

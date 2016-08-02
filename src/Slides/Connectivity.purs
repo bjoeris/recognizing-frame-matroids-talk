@@ -5,6 +5,7 @@ import Slides.Util
 import Data.Graph as Graph
 import Data.Graph.Render.SVG as Graph
 import Halogen.HTML.Styles.Tweened as Styles
+import Slides.Images as Img
 
 slides :: forall b p i. Array (TTween b (HTML p i))
 slides =
@@ -49,12 +50,12 @@ treeDecomp = do
       ]
     , overlayParent
       [ fadeOut' i1 $ img
-        [ src "./tree-decomp-tree.svg", Styles.height (50.0 # rem) ]
+        [ src Img.treeDecompTree, Styles.height (50.0 # rem) ]
       , fadeInOut' i1 i2 $ overlay
-        [ img [src "./tree-decomp-flats.svg", Styles.height (50.0 # rem) ]
+        [ img [src Img.treeDecompFlats, Styles.height (50.0 # rem) ]
         ]
       , fadeIn' i2 $ overlay
-        [ img [src "./tree-decomp-blob.svg", Styles.height (50.0 # rem) ]
+        [ img [src Img.treeDecompBlob, Styles.height (50.0 # rem) ]
         ]
       ]
     ]
@@ -85,22 +86,22 @@ algoOverview = do
       ]
     , overlayParent
       [ fadeInOut' i1 i2 $ img
-        [ src "./tree-decomp-flats.svg", Styles.height (50.0 # rem) ]
+        [ src Img.treeDecompFlats, Styles.height (50.0 # rem) ]
       , fadeInOut' i2 i3 $ overlay
         [ img
-          [ src "./tree-decomp-graphs.svg", Styles.height (50.0 # rem) ]
+          [ src Img.treeDecompGraphs, Styles.height (50.0 # rem) ]
         ]
       , fadeInOut' i3 i4 $ overlay
         [ img
-          [ src "./tree-decomp-graphs-2.svg", Styles.height (50.0 # rem) ]
+          [ src Img.treeDecompGraphs2, Styles.height (50.0 # rem) ]
         ]
       , fadeInOut' i4 i5 $ overlay
         [ img
-          [ src "./tree-decomp-graphs-merge.svg", Styles.height (50.0 # rem) ]
+          [ src Img.treeDecompGraphsMerge, Styles.height (50.0 # rem) ]
         ]
       , fadeInOut' i5 i6 $ overlay
         [ img
-          [ src "./tree-decomp-graphs-merge-2.svg", Styles.height (50.0 # rem) ]
+          [ src Img.treeDecompGraphsMerge2, Styles.height (50.0 # rem) ]
         ]
       ]
     ]
@@ -119,7 +120,7 @@ decomp2 = do
         ]
       ]
     , img
-      [ src "./tree-2-decomp.svg"
+      [ src Img.tree2Decomp
       , Styles.height (50.0 # rem)
       , marginTop (-35.0 # rem)
       , marginLeft (15.0 # rem)
@@ -150,24 +151,24 @@ weak4conn = do
       ]
     , overlayParent
       [ fadeIn' i4 $ fadeOut' i1 $ img
-        [ src "./flower.svg"
+        [ src Img.flower
         , Styles.height (50.0 # rem)
         ]
       , fadeInOut' i1 i2 $ overlay
         [img
-          [ src "./flower-1.svg"
+          [ src Img.flower1
           , Styles.height (50.0 # rem)
           ]
         ]
       , fadeInOut' i2 i3 $ overlay
         [img
-          [ src "./flower-2.svg"
+          [ src Img.flower2
           , Styles.height (50.0 # rem)
           ]
         ]
       , fadeInOut' i3 i4 $ overlay
         [ img
-          [ src "./flower-3.svg"
+          [ src Img.flower3
           , Styles.height (50.0 # rem)
           ]
         ]
@@ -187,7 +188,7 @@ weak4connThm = do
         ]
       ]
     , img
-      [ src "./tree-decomp-flats.svg"
+      [ src Img.treeDecompFlats
       , Styles.height (50.0 # rem)
       , marginTop (-40.0 # rem)
       , marginLeft (35.0 # rem)
@@ -218,42 +219,42 @@ biasedGraphParts = do
       ]
     , overlayParent
       [ fadeOut' i1 $ img
-        [ src "./bond-1.svg"
+        [ src Img.bond1
         , Styles.height (50.0 # rem)
         ]
       , fadeInOut' i1 i2 $ overlay
         [ img
-          [ src "./bond-2.svg"
+          [ src Img.bond2
           , Styles.height (50.0 # rem)
           ]
         ]
       , fadeInOut' i2 i3 $ overlay
         [ img
-          [ src "./cycle-1.svg"
+          [ src Img.cycle1
           , Styles.height (50.0 # rem)
           ]
         ]
       , fadeInOut' i3 i4 $ overlay
         [ img
-          [ src "./cycle-2.svg"
+          [ src Img.cycle2
           , Styles.height (50.0 # rem)
           ]
         ]
       , fadeInOut' i4 i5 $ overlay
         [ img
-          [ src "./cycle-3.svg"
+          [ src Img.cycle3
           , Styles.height (50.0 # rem)
           ]
         ]
       , fadeInOut' i5 i6 $ overlay
         [ img
-          [ src "./wheel-1.svg"
+          [ src Img.wheel1
           , Styles.height (50.0 # rem)
           ]
         ]
       , fadeIn' i6 $ overlay
         [ img
-          [ src "./wheel-2.svg"
+          [ src Img.wheel2
           , Styles.height (50.0 # rem)
           ]
         ]
@@ -333,60 +334,60 @@ compat = do
     , div [marginTop (-10.0 # rem)]
       [ overlayParent
         [ fadeOut' i1 $ img
-          [ src "./unbalanced-2sep.svg"
+          [ src Img.unbalanced2Sep
           , Styles.height (50.0 # rem)
           ]
         , fadeInOut' i1 i2 $ overlay
           [ img
-            [ src "./unbalanced-2sep-apart.svg"
+            [ src Img.unbalanced2SepApart
             , Styles.height (50.0 # rem)
             ]
           ]
         , fadeInOut' i2 i3 $ overlay
           [ img
-            [ src "./unbalanced-3sep.svg"
+            [ src Img.unbalanced3Sep
             , Styles.height (50.0 # rem)
             ]
           ]
         , fadeInOut' i3 i4 $ overlay
           [ img
-            [ src "./unbalanced-3sep-apart.svg"
+            [ src Img.unbalanced3SepApart
             , Styles.height (50.0 # rem)
             ]
           ]
         , fadeInOut' i4 i5 $ overlay
           [ img
-            [ src "./semibalanced-2sep.svg"
+            [ src Img.semibalanced2Sep
             , Styles.height (50.0 # rem)
             ]
           ]
         , fadeInOut' i5 i6 $ overlay
           [ img
-            [ src "./semibalanced-2sep-apart.svg"
+            [ src Img.semibalanced2SepApart
             , Styles.height (50.0 # rem)
             ]
           ]
         , fadeInOut' i6 i7 $ overlay
           [ img
-            [ src "./semibalanced-3sep.svg"
+            [ src Img.semibalanced3Sep
             , Styles.height (50.0 # rem)
             ]
           ]
         , fadeInOut' i7 i8 $ overlay
           [ img
-            [ src "./semibalanced-3sep-apart.svg"
+            [ src Img.semibalanced3SepApart
             , Styles.height (50.0 # rem)
             ]
           ]
         , fadeInOut' i8 i9 $ overlay
           [ img
-            [ src "./degenerate-2sep.svg"
+            [ src Img.degenerate2Sep
             , Styles.height (50.0 # rem)
             ]
           ]
         , fadeIn' i9 $ overlay
           [ img
-            [ src "./degenerate-3sep.svg"
+            [ src Img.degenerate3Sep
             , Styles.height (50.0 # rem)
             ]
           ]
@@ -426,36 +427,36 @@ algorithm = do
       ]
     , overlayParent
       [ fadeOut' i1 $ img
-        [ src "./algorithm-1.1.svg"
+        [ src Img.algorithm1
         , Styles.height h
         ]
       , fadeInOut' i1 i2 $ overlay
         [ img
-          [ src "./algorithm-1.2.svg"
+          [ src Img.algorithm2
           , Styles.height h
           ]
         ]
       , fadeInOut' i2 i3 $ overlay
         [ img
-          [ src "./algorithm-1.3.svg"
+          [ src Img.algorithm3
           , Styles.height h
           ]
         ]
       , fadeInOut' i3 i4 $ overlay
         [ img
-          [ src "./algorithm-1.4.svg"
+          [ src Img.algorithm4
           , Styles.height h
           ]
         ]
       , fadeInOut' i4 i5 $ overlay
         [ img
-          [ src "./algorithm-1.5.svg"
+          [ src Img.algorithm5
           , Styles.height h
           ]
         ]
       , fadeIn' i5 $ overlay
         [ img
-          [ src "./algorithm-1.6.svg"
+          [ src Img.algorithm6
           , Styles.height h
           ]
         ]

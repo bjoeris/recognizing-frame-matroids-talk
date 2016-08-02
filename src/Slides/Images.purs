@@ -1,0 +1,37 @@
+module Slides.Images where
+
+foreign import treeDecompTree :: String 
+foreign import treeDecompFlats :: String
+foreign import treeDecompBlob :: String
+foreign import treeDecompGraphs :: String
+foreign import treeDecompGraphs2 :: String
+foreign import treeDecompGraphsMerge :: String
+foreign import treeDecompGraphsMerge2 :: String
+foreign import tree2Decomp :: String
+foreign import flower :: String
+foreign import flower1 :: String
+foreign import flower2 :: String
+foreign import flower3 :: String
+foreign import bond1 :: String
+foreign import bond2 :: String
+foreign import cycle1 :: String
+foreign import cycle2 :: String
+foreign import cycle3 :: String
+foreign import wheel1 :: String
+foreign import wheel2 :: String
+foreign import unbalanced2Sep :: String
+foreign import unbalanced2SepApart :: String
+foreign import unbalanced3Sep :: String
+foreign import unbalanced3SepApart :: String
+foreign import semibalanced2Sep :: String
+foreign import semibalanced2SepApart :: String
+foreign import semibalanced3Sep :: String
+foreign import semibalanced3SepApart :: String
+foreign import degenerate2Sep :: String
+foreign import degenerate3Sep :: String
+foreign import algorithm1 :: String
+foreign import algorithm2 :: String
+foreign import algorithm3 :: String
+foreign import algorithm4 :: String
+foreign import algorithm5 :: String
+foreign import algorithm6 :: String

@@ -29,6 +29,7 @@ import Halogen.HTML.Properties.Tweened (tweenProp)
 -- import Halogen.SVG.Properties.Indexed as I
 -- import Halogen.HTML.Styles.Indexed as I
 import Halogen.SVG.Properties (round,Align(Mid),userSpaceOnUse)
+import Halogen.HTML.Styles.Indexed as Styles
 
 import Timeline.Build as Timeline
 import Timeline.Tween as Timeline
@@ -120,8 +121,8 @@ pokeball =
           , gradientUnits userSpaceOnUse
           ]
 
-    pure $ svg [ SVG.width width, 
-                 SVG.height height, 
+    pure $ svg [ Styles.width width, 
+                 Styles.height height, 
                  viewBox (-1.0) (-1.0) 2.0 2.0, 
                  preserveAspectRatio {defer: false, align: Just {x:Mid, y:Mid}, meetOrSlice: Nothing} ]
       [ defs [] 
